@@ -10,15 +10,16 @@ class CirculationService:
 
     database = dependenciesCirculation.Database()
 
-    #circulation_rpc = RpcProxy('room_service')
+    
 
     #Publish Subscribe
-    #dispatch = EventDispatcher()
+    dispatch = EventDispatcher()
 
-    #Cth Event Handler
-    #@event_handler("calculation_service", "meong_event")
-    #def handle_event_method(self, payload):
-    #    print(payload)
+    #Handle Event  (Orchestration)
+    @event_handler("orchestration_service", "circulation_event")
+    def handle_event_method(self, payload):
+        print(payload)
+
 
     @http('GET','/room_item_by_id/<int:id_room>/<int:id_item>')
     def get_room_item_by_id(self, request, id_room, id_item):
@@ -26,7 +27,7 @@ class CirculationService:
         return json.dumps({'result': room_item})
 
     @http('POST', '/room_item')
-    def add_room(self, request):
+    def add_room_item(self, request):
         data = json.loads(request.get_data(as_text=True))
         new_room_item = self.add_room_item(data['id_room'], data['id_item'])
         return new_room_item
